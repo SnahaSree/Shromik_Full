@@ -1,7 +1,15 @@
-import { User, type IUser } from "../models/User.js";
-import { BaseRepository } from "./BaseRepository.js";
+import {
+  User,
+  type IUser,
+} from "../models/User.js";
 
-export class UserRepository extends BaseRepository<IUser> {
+import {
+  BaseRepository,
+} from "./BaseRepository.js";
+
+export class UserRepository
+  extends BaseRepository<IUser>
+{
   constructor() {
     super(User);
   }
@@ -16,20 +24,23 @@ export class UserRepository extends BaseRepository<IUser> {
       .exec();
   }
 
-  async findByPhone(
-    phone: string,
+  async findByEmailWithAuthData(
+    email: string,
   ): Promise<IUser | null> {
     return User.findOne({
-      phone,
-    }).exec();
+      email: email.toLowerCase(),
+    })
+      .select(
+        "+passwordHash +refreshTokenHash +passwordResetTokenHash +verificationTokenHash",
+      )
+      .exec();
   }
 
-  async findActiveUser(
-    filter: Record<string, unknown>,
+  async findByIdWithRefreshToken(
+    id: string,
   ): Promise<IUser | null> {
-    return User.findOne({
-      ...filter,
-      accountStatus: "active",
-    }).exec();
+    return User.findById(id)
+      .select("+refreshTokenHash")
+      .exec();
   }
 }

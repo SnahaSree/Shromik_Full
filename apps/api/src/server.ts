@@ -7,6 +7,8 @@ import helmet from "helmet";
 import mongoose from "mongoose";
 
 import { connectDatabase } from "./config/database.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import { notFoundHandler } from "./middleware/notFound.js";
 
 const app = express();
 
@@ -54,6 +56,12 @@ app.get("/api/v1/health", (_req, res) => {
   });
 });
 
+app.get("/api/v1/test-error", (_req, _res) => {
+  throw new Error("Intentional test error");
+});
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 async function bootstrap(): Promise<void> {
   await connectDatabase();
 

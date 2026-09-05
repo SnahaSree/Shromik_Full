@@ -1,0 +1,15 @@
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data?: T;
+  meta?: Record<string, unknown>;
+}
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}

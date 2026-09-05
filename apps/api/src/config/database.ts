@@ -7,7 +7,14 @@ export async function connectDatabase(): Promise<void> {
     throw new Error("MONGODB_URI is not configured");
   }
 
-  await mongoose.connect(mongoUri);
+  await mongoose.connect(mongoUri, {
+    serverSelectionTimeoutMS: 10000,
+  });
 
   console.log("MongoDB connected successfully");
+}
+
+export async function disconnectDatabase(): Promise<void> {
+  await mongoose.disconnect();
+  console.log("MongoDB disconnected");
 }
